@@ -39,6 +39,7 @@ def load_listings(f):
         dict = {}
         for i in range(len(header)):
             dict[header[i]] = row[i]
+        data.append(dict)
     
     return data
 
@@ -65,9 +66,9 @@ def calculate_avg_price_by_neighbourhood_group_and_room(listings):
         group = item["neighbourhood_group"]
         type = item["room_type"]
         if dict.get((group, type)) is None:
-            dict[(group, type)] = [float(item["average_price"]), 1]
+            dict[(group, type)] = [float(item["price"]), 1]
         else:
-            dict[(group, type)] = [dict[(group, type)][0] + float(item["average_price"]), dict[(group, type)][1]+1]
+            dict[(group, type)] = [dict[(group, type)][0] + float(item["price"]), dict[(group, type)][1]+1]
 
     for key in dict:
         dict[key] = dict[key][0]/dict[key][1]
@@ -95,7 +96,7 @@ def write_summary_csv(out_filename, avg_prices):
         None
             Writes a CSV file with header: neighbourhood_group, room_type, average_price
     """
-    file = open('output.csv', 'w', newline='')
+    file = open(out_filename, 'w', newline='')
     writer = csv.writer(file)
     writer.writerow(['neighbourhood_group', 'room_type', 'average_price'])
     for key in avg_prices:
